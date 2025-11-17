@@ -79,6 +79,10 @@
       </div>
       <div class=" mt-2 text-info fw-bolder">".بعد رسم مضلع يمكن رؤية المساحة وتحويلها"</div>
     </div>
+    <!-- ex kml -->
+    <div class="exportKml card  mb-3  m-auto w-75  text-white">
+      <button id="exportKml" class=" btn btn-success m-auto w-100 text-white">Export KML</button>
+    </div>
     <!--  converter-->
     <div class="S-converter card   m-auto  text-end text-white " style="width: 90%;">
       <div class="card p-2">
@@ -122,12 +126,15 @@
         </div>
       </div>
     </div>
+
   </div>
   <!-- الخريطة -->
   <div id="map">
     <h6 class="coordinates bg-body-tertiary p-2 fw-bold  "></h6>
   </div>
   <!-- js -->
+   <script src="https://unpkg.com/tokml@0.4.0/tokml.js"></script>
+
   <script src="main.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
