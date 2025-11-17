@@ -36,6 +36,41 @@ map.on("draw:created", function (e) {
     
   drawnItems.addLayer(layer);
 });
+// /////////////////////////////////////////// export KML///////////////////////////////////////////////////////////////////
+// زر التصدير (باستخدام tokml)
+document.getElementById('exportKml').addEventListener('click', function () {
+  if (!drawnItems || drawnItems.getLayers().length === 0) {
+    alert('لا يوجد رسومات للتصدير.');
+    return;
+  }
+
+  // 1) اخراج GeoJSON من العناصر المرسومة
+  var geojson = drawnItems.toGeoJSON();
+
+  // 2) تحويل GeoJSON إلى KML (مكتبة tokml)
+  // tokml متاحة عبر CDN عند تضمينها في HTML
+  try {
+    var kml = tokml(geojson, {
+      name: 'name',      // يمكنك تغيير الحقول المربوطة
+      description: 'description',
+      area :"area"
+    });
+
+    // 3) تحميل الملف
+    var blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'drawn_features.kml';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+    alert('حدث خطأ أثناء تحويل البيانات إلى KML.');
+  }
+});
 // 2-Layers Control (التحكم في الطبقات)
 var baseMaps =
 {
@@ -93,7 +128,6 @@ document.getElementById("CordBtClear").addEventListener("click", function (e) {
 map.on('mousemove', function(e) {
   let lat = e.latlng.lat.toFixed(7);
   let lng = e.latlng.lng.toFixed(7);
-
   $(".coordinates").html(`latitude : ${lat} , longitude : ${lng}`);
 });
 // ////////////////////////////////////////////////////////////////////تحميل ملف GeoJSON من داخل المشروع/////////////////////
@@ -191,8 +225,6 @@ document.getElementById("calcBtn2").onclick = function () {
       <td>${faddan}</td>
       <td>${qerat}</td>
       <td>${sahm}</td>
-
-
     `;
         tableBody.appendChild(row);
     });
