@@ -23,7 +23,6 @@
   <!--  -->
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
-
 <body>
   <!-- topbar -->
   <nav>
@@ -37,7 +36,7 @@
   <!-- sidebar -->
   <div class="sidebar">
     <!-- select layer -->
-    <div class="select card m-3 p-3 text-end text-white ">
+    <div class="select card m-3 p-3 text-end text-white d-none" style="width: 90%;">
       <h5 class="fw-bold">اختر للعرض</h5>
       <div class="form-check">
         <input class="form-check-input" type="checkbox" value="" id="zmam">
@@ -79,8 +78,13 @@
       </div>
       <div class=" mt-2 text-info fw-bolder">".بعد رسم مضلع يمكن رؤية المساحة وتحويلها"</div>
     </div>
+    <!-- area resulte -->
+    <div class="resultArea card  mb-3  m-auto  text-white text-end p-3 d-none" style="width: 90%;">
+      <label for="resultArea " class="mb-2 fw-bold">ناتج الرسم بالمتر المربع</label>
+      <input type="text" name="" class="form-control w-100" id="resultArea" placeholder="- - - -">
+    </div>
     <!-- ex kml -->
-    <div class="exportKml card  mb-3  m-auto w-75  text-white">
+    <div class="exportKml card  mb-3  m-auto   text-white" style="width: 90%;">
       <button id="exportKml" class=" btn btn-success m-auto w-100 text-white">Export KML</button>
     </div>
     <!--  converter-->
@@ -151,11 +155,10 @@
         </div>
       </div>
     </div>
-
   </div>
   <!-- الخريطة -->
   <div id="map">
-    <h6 class="coordinates bg-body-tertiary p-2 fw-bold  "></h6>
+    <h6 class="coordinates bg-body-tertiary p-2 fw-bold "></h6>
   </div>
   <!-- js -->
   <script src="https://unpkg.com/tokml@0.4.0/tokml.js"></script>
