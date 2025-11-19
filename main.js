@@ -21,22 +21,72 @@ var Topographic = L.tileLayer(
   }
 );
 ////////////////////////////////////////////////////////////////////////// الرسم/////////////////////////////////////////
+// مجموعة الطبقات التي سيتم الرسم عليها
 var drawnItems = new L.FeatureGroup();
 map.addLayer(drawnItems);
+
+// أدوات الرسم
 var drawControl = new L.Control.Draw({
   edit: { featureGroup: drawnItems }
 });
 map.addControl(drawControl);
+
+// ربط الديف الخارجي
+var rArea = document.getElementById("resultArea");
+
+
+// الحدث الرئيسي عند إنشاء أي شكل على الخريطة
 map.on("draw:created", function (e) {
   var layer = e.layer;
-  layer.bindPopup(`<p>
-    ${JSON.stringify(layer.toGeoJSON())}
-    </p>`)
-  console.log(layer);
+  var type = e.layerType;
+  let resultText = "";
 
+  // ===============================
+  // 1) حساب طول الخط Polyline
+  // ===============================
+  if (type === "polyline") {
+    var latlngs = layer.getLatLngs();
+    var length = 0;
+
+    // حساب مجموع المسافات بين النقاط
+    for (var i = 0; i < latlngs.length - 1; i++) {
+      length += latlngs[i].distanceTo(latlngs[i + 1]);
+    }
+
+    var length_m = length.toFixed(2);
+    resultText = `Length: ${length_m} m`;
+
+    // إظهار في Popup
+    layer.bindPopup(`<p>${resultText}</p>`);
+    console.log(resultText);
+  }
+  // 2) حساب مساحة المضلع Polygon أو Rectangle
+  
+  if (type === "polygon" || type === "rectangle") {
+    var latlngs = layer.getLatLngs()[0]; // إحداثيات المضلع
+    var area = L.GeometryUtil.geodesicArea(latlngs);
+    var area_m2 = area.toFixed(2);
+
+    resultText = `Area: ${area_m2} m²`;
+
+    // إظهار في Popup
+    layer.bindPopup(`<p>${resultText}</p>`);
+    console.log(resultText);
+  }
+
+
+  // ===============================
+  // عرض النتيجة في DIV خارجي
+  // ===============================
+  rArea.innerHTML = resultText;
+
+  // إضافة الطبقة للخريطة
   drawnItems.addLayer(layer);
 });
-// /////////////////////////////////////////// export KML///////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////export KML///////////////////////////////////////////////////////////////////
 // زر التصدير (باستخدام tokml)
 document.getElementById('exportKml').addEventListener('click', function () {
   if (!drawnItems || drawnItems.getLayers().length === 0) {
@@ -55,7 +105,6 @@ document.getElementById('exportKml').addEventListener('click', function () {
       description: 'description',
       area: "area"
     });
-
     // 3) تحميل الملف
     var blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml;charset=utf-8' });
     var url = URL.createObjectURL(blob);
@@ -71,6 +120,7 @@ document.getElementById('exportKml').addEventListener('click', function () {
     alert('حدث خطأ أثناء تحويل البيانات إلى KML.');
   }
 });
+
 // 2-Layers Control (التحكم في الطبقات)
 var baseMaps =
 {
@@ -152,7 +202,6 @@ fetch('./zmams.json')
             popupContent += `<td>${feature.properties[key]}</td>`;
           }
           popupContent += '</tr></tbody></table></div>';
-
           layer.bindPopup(popupContent, {
             maxWidth: 900,  // التحكم في عرض الـ Popup
             minWidth: 200,
