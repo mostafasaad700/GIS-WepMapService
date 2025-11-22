@@ -187,7 +187,7 @@ map.on('mousemove', function (e) {
   $(".coordinates").html(`latitude : ${lat} , longitude : ${lng}`);
 });
 // ////////////////////////////////////////////////////////////////////تحميل ملف GeoJSON من داخل المشروع/////////////////////
-fetch('./zmams.json')
+fetch('./egy.json')
   .then(response => response.json())
   .then(data => {
     var geojsonLayer = L.geoJSON(data, {
@@ -335,3 +335,4 @@ var map = L.map('map', {
   center: [51.505, -0.09],
   zoom: 13
 });
+
